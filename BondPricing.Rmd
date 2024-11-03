@@ -1,0 +1,123 @@
+---
+title: "R Notebook"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+#periods
+P = 29
+#Future Value
+FV= 100
+#coupon return
+CR =0.08
+YTM = 0.011
+
+r = YTM/P
+C = (CR *FV)/P
+N = 1 * P 
+
+
+bondprice = (C/r)*(1-(1/(1+r)**N))+FV/(1+r)**N
+bondprice
+```
+
+```{r}
+# coupon  reinvestment
+FV =1043
+c <- 40  # Example coupon value
+r <- 0.0249 # Example interest rate
+
+# Initial number of periods
+N <- 2
+
+# Initialize an empty vector to store reinvestment values
+reinvestments <- numeric(N)
+
+# Loop to calculate reinvestment values
+for (i in 1:N) {
+  reinvestments[i] <- c * (1 + r)**(N - i)
+}
+
+# Print the reinvestment values
+print(reinvestments)
+coupre = sum(reinvestments) 
+coupre +FV
+```
+
+
+Problem #2 from Chapter 5 Problem set
+ 
+$$
+\text{Price} = \frac{C}{(1 + r)} + \frac{F}{(1 + r)^n} 
+\\ 
+ 
+ 
+\text{Capital Gain} = \text{Price}_{\text{end}} - \text{Price}_{\text{beginning}}
+\\
+
+\text{HPR} = \frac{\text{Coupon Payment} + \text{Capital Gain}}{\text{Price}_{\text{beginning}}}
+$$
+```{r}
+#face value
+FV=100
+# r = yeild to maturity
+YTM= 0.08
+r=YTM
+#coupon rate
+cr=0.035
+# Coupon paymnet
+C= FV*cr
+
+# number of years remaining
+N=29
+
+
+bondprice = (C/r)*(1-(1/(1+r)**N))+FV/(1+r)**N
+cat("bond price is:", bondprice)
+
+Capital_Gains= bondprice-FV
+cat("Capital Gains is:", Capital_Gains)
+
+#Holding Period Return
+HPR = (C+Capital_Gains)/FV
+cat("Holding Period Return:", HPR)
+
+
+```
+
+Question#3
+$$  
+\text{Note: P(q) is the probability vector}\\
+E(q)= \Sigma[q \times P(q)]
+$$
+
+$$
+E(q^2)= \Sigma[q^2 \times P(q)]
+$$
+$$
+\sigma^2(q)= E(q^2)-[E(q)]^2
+$$
+$$
+\sigma(q)= \sqrt{\sigma^2(q)}
+$$
+```{r}
+Expected_value =(0*0.21)+(1*0.30)+(2*0.49)
+Expected_value_squared =(0**2 *0.21)+(1**2 *0.30)+(2**2 *0.49)
+Variance = Expected_value_squared - Expected_value**2
+sd= sqrt(Variance)
+sd
+
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.

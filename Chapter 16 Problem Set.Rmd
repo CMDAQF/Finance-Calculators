@@ -1,0 +1,90 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+# Given parameters
+face_value <- 1000  # Bond face value
+coupon_rate <- 0.094  # Coupon rate
+coupon_payment <- face_value * coupon_rate  # Annual coupon payment
+years <- 3  # Maturity in years
+
+# Cash flows for each year including final principal repayment
+cash_flows <- c(rep(coupon_payment, years - 1), coupon_payment + face_value)
+
+# Function to calculate Macaulay Duration
+macaulay_duration <- function(cash_flows, ytm, years) {
+  # Discounted cash flows and weighted cash flows calculations
+  discounted_cash_flows <- sapply(1:years, function(t) cash_flows[t] / ((1 + ytm) ^ t))
+  weighted_cash_flows <- sapply(1:years, function(t) (t * cash_flows[t]) / ((1 + ytm) ^ t))
+  
+  # Macaulay Duration
+  duration <- sum(weighted_cash_flows) / sum(discounted_cash_flows)
+  return(round(duration, 2))
+}
+
+# Calculating durations for YTM 9.4% and 12%
+duration_ytm_9_4 <- macaulay_duration(cash_flows, 0.094, years)
+duration_ytm_12 <- macaulay_duration(cash_flows, 0.12, years)
+
+# Output results
+duration_ytm_9_4
+duration_ytm_12
+```
+```{r}
+# Given data
+tuition_payment <- 10800  # Payment at the end of each year
+years <- c(1, 2)          # Payment years
+initial_rate <- 0.08      # Initial discount rate (8%)
+
+# Calculate Present Value (PV) of the tuition obligation
+pv_obligation <- sum(tuition_payment / ((1 + initial_rate) ^ years))
+
+# Calculate Duration (weighted average time)
+duration_numerator <- sum(years * (tuition_payment / ((1 + initial_rate) ^ years)))
+duration_obligation <- duration_numerator / pv_obligation
+
+# PV of obligation at increased (10%) and decreased (6%) rates
+rate_increase <- 0.10
+rate_decrease <- 0.06
+
+pv_obligation_increased_rate <- sum(tuition_payment / ((1 + rate_increase) ^ years))
+pv_obligation_decreased_rate <- sum(tuition_payment / ((1 + rate_decrease) ^ years))
+
+# Assume zero-coupon bond initially matches PV and duration at the initial rate
+pv_zero_coupon_initial <- pv_obligation  # Initial PV of zero-coupon bond
+duration_zero_coupon <- duration_obligation  # Duration matching the obligation
+
+# Zero-coupon bond PV with matching duration at 10% and 6% rates
+pv_zero_coupon_increased_rate <- pv_zero_coupon_initial / ((1 + rate_increase) ^ duration_zero_coupon)
+pv_zero_coupon_decreased_rate <- pv_zero_coupon_initial / ((1 + rate_decrease) ^ duration_zero_coupon)
+
+# Net position calculations for 10% and 6% rates
+net_position_increase <- pv_zero_coupon_increased_rate - pv_obligation_increased_rate
+net_position_decrease <- pv_zero_coupon_decreased_rate - pv_obligation_decreased_rate
+
+# Print results
+cat("Present Value of Tuition Obligation:", round(pv_obligation, 2), "\n")
+cat("Duration of Obligation:", round(duration_obligation, 2), "\n")
+present_value <- 19259.26     # Present Value of the obligation
+rate <- 0.08                  # Bond yield (8%)
+duration <- 1.48              # Duration of the obligation
+
+# Calculate the face value
+face_value <- present_value * (1 + rate) ^ duration
+
+# Print result
+cat("Face Value of the Zero-Coupon Bond:", round(face_value, 2), "\n")
+cat("Net Position at 10% Rate Increase:", round(net_position_increase, 2), "\n")
+cat("Net Position at 6% Rate Decrease:", round(net_position_decrease, 2), "\n")
+```
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.

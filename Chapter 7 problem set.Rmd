@@ -1,0 +1,80 @@
+---
+title: "Fin Chapter 7 Problem set"
+output: html_document
+date: "2024-09-30"
+---
+
+```{r setup, include=FALSE}
+
+```
+
+## R Markdown
+
+#### a-1: Investment proportions in the minimum-variance portfolio
+
+The weight of stock in the portfolio \( w_S \) is calculated using the formula:
+
+$$
+w_S = \frac{\sigma_B^2 - Cov(r_{s}, r_{b})}{\sigma_S^2 + \sigma_B^2 - 2 Cov(r_{s}, r_{b})}
+$$
+The weight of bonds in the portfolio \( w_B \) is:
+
+$$
+w_B = 1 - w_S
+$$
+```{r problem_1}
+Ers=0.22 # Stock expected return
+ErB=0.12 # Bond expected return
+sds=0.32 # Stock standard deviation
+sdB=0.19  # Bond standard deviation
+p =0.11 #correlation coefficent
+mmf=0.07 #money market fund that provides a safe return
+
+#w_s =(.15**2 -.11*.32*.15)/ (.32**2 +.15**2 -2*.11*.32*.15)
+
+w_s = ((sdB**2) - (p * sds * sdB)) / ((sds**2) + (sdB**2) - (2 * p * sds * sdB))
+w_s
+
+
+w_B =1- w_s
+w_B
+```
+
+
+
+
+#### a-2: Expected return and standard deviation of the minimum-variance portfolio
+
+The expected return of the minimum-variance portfolio \( E(R_p) \) is given by:
+
+$$
+E(R_p) = w_S E(R_S) + w_B E(R_B)
+$$
+
+The standard deviation of the minimum-variance portfolio \( \sigma_p \) is:
+
+$$
+\sigma_p = \sqrt{w_S^2 \sigma_S^2 + w_B^2 \sigma_B^2 + 2 w_S w_B \sigma_S \sigma_B \rho_{SB}}
+$$
+
+```{r Problem_1}
+ 
+# Calculate expected return of the portfolio
+Erp = w_s * Ers + w_B * ErB
+cat("Expected Return of the Portfolio (Erp):", Erp) 
+
+# Correct the formula for the standard deviation of the portfolio
+sdp = (w_s**2 * sds**2 + w_B**2 * sdB**2 + 2 * w_s * w_B * sds * sdB * p) ** 0.5
+cat("Standard Deviation of the Portfolio (sdp):", sdp)
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
